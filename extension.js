@@ -53,8 +53,9 @@ export default class NotificationThemeExtension extends Extension {
         Main.overview.disconnect(this._overviewSignalId);
         this._overviewSignalId = null;
       }
-    }, this);
+    });
   }
+
 
   /**
      * Set dash container and background dimensions
@@ -122,7 +123,7 @@ export default class NotificationThemeExtension extends Extension {
   disable() {
     // Cleanup startup signal if still connected
     if (this._overviewSignalId) {
-      Main.overview.disconnectObject(this._overviewSignalId);
+      Main.overview.disconnect(this._overviewSignalId);
       this._overviewSignalId = null;
     }
 
