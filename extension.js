@@ -63,7 +63,7 @@ export default class NotificationThemeExtension extends Extension {
   _setDashDimensions(dash) {
     journal(`_setDashDimensions`);
     // Set dash container width
-    dash._dashContainer.width = 1100;
+    dash._dashContainer.width = -1;
 
     // Set dash and container heights
     dash.height = 350;
