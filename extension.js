@@ -12,7 +12,6 @@ export default class NotificationThemeExtension extends Extension {
     super(metadata);
     this._startupCompleteId = null;
     this._iconSizeSignal = null;
-    this._originalIconSize = null;
   }
 
   enable() {
@@ -121,9 +120,6 @@ export default class NotificationThemeExtension extends Extension {
    * Force icon size to 112px
    */
   _setIconSize() {
-    // Store original icon size
-    this._originalIconSize = Dash.iconSize;
-
     // Connect to icon-size-changed to force our size
     this._iconSizeSignal = Dash.connect('icon-size-changed', () => {
       journal(`Icon size change`);
@@ -168,12 +164,6 @@ export default class NotificationThemeExtension extends Extension {
     if (this._iconSizeSignal) {
       Dash.disconnect(this._iconSizeSignal);
       this._iconSizeSignal = null;
-    }
-
-    if (this._originalIconSize !== null) {
-      Dash.iconSize = this._originalIconSize;
-      Dash.emit('icon-size-changed');
-      this._originalIconSize = null;
     }
 
     // Reset dimensions
