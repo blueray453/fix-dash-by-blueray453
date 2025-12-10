@@ -116,9 +116,22 @@ export default class NotificationThemeExtension extends Extension {
     Dash.translation_y = -100;
   }
 
-  /**
-   * Force icon size to 112px
-   */
+  // in dash-by-blueray453 new Dash() creates a fresh dash object that YOU control.
+  // It doesn't have any automatic resizing behavior set up yet
+  // GNOME Shell's overview manager isn't controlling it
+  // So setting iconSize directly works and sticks
+  // When modifying the EXISTING overview dash:
+  // Main.overview.dash is already managed by GNOME Shell's overview system
+  // The overview has already connected signals and logic that
+  // automatically resize the dash
+  // The overview's _updateWorkspacesDisplay(), _relayout(), and other methods
+  // continuously recalculate and update the dash icon size based on screen geometry
+  // So your manual size change gets immediately overridden
+  // Think of it like:
+  // New Dash: A blank canvas you control completely
+  // Overview Dash: A dash with a "manager" constantly adjusting it
+  // That's why for the overview dash, you need to:
+  // Listen to icon-size-changed and force it back(your working solution)
   _setIconSize() {
     // Connect to icon-size-changed to force our size
     this._iconSizeSignal = Dash.connect('icon-size-changed', () => {
