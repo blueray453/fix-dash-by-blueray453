@@ -40,6 +40,8 @@ export default class NotificationThemeExtension extends Extension {
     // journalctl -f -o cat SYSLOG_IDENTIFIER=fix-dash-by-blueray453
     journal(`Enabled`);
 
+    // Dash.hide();
+
     // OverviewControls.hide();
 
     // const ws = OverviewControls._workspacesDisplay;
