@@ -71,19 +71,23 @@ export default class NotificationThemeExtension extends Extension {
     }
     thumbnailsBox._updateShouldShow();
 
-    this._overviewSignalId = Main.overview.connect('showing', () => {
-      journal('Overview showing - applying changes');
+    // this._overviewSignalId = Main.overview.connect('showing', () => {
+    //   journal('Overview showing - applying changes');
 
-      this._setDashDimensions();
-      this._setDashPosition();
-      this._setIconSize();
+    //   this._setDashDimensions();
+    //   this._setDashPosition();
+    //   this._setIconSize();
 
-      // Disconnect after first use
-      if (this._overviewSignalId) {
-        Main.overview.disconnect(this._overviewSignalId);
-        this._overviewSignalId = null;
-      }
-    });
+    //   // Disconnect after first use
+    //   if (this._overviewSignalId) {
+    //     Main.overview.disconnect(this._overviewSignalId);
+    //     this._overviewSignalId = null;
+    //   }
+    // });
+
+    this._setDashDimensions();
+    this._setDashPosition();
+    this._setIconSize();
   }
 
   /**
