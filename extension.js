@@ -40,6 +40,10 @@ export default class NotificationThemeExtension extends Extension {
     // journalctl -f -o cat SYSLOG_IDENTIFIER=fix-dash-by-blueray453
     journal(`Enabled`);
 
+    // Dash.iconSize = 112;
+    // Dash._maxIconSize = 112;
+    // Dash._redisplay();
+
     // Dash.hide();
 
     // OverviewControls.hide();
@@ -144,6 +148,8 @@ export default class NotificationThemeExtension extends Extension {
 
     // Set initial size
     Dash.iconSize = 112;
+    // Dash._maxIconSize = 112;
+    Dash._redisplay();
     // dash.emit('icon-size-changed');
   }
 
