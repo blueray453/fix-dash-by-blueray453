@@ -1,7 +1,11 @@
 import GLib from 'gi://GLib';
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import { setLogging, setLogFn, journal } from './utils.js'
+import { setLogging, setLogFn, journal } from './utils.js';
+
+const OverviewControls = Main.overview._overview._controls;
+const thumbnailsBox = OverviewControls._thumbnailsBox;
+const Dash = OverviewControls.dash;
 
 export default class NotificationThemeExtension extends Extension {
   constructor(metadata) {
@@ -36,17 +40,25 @@ export default class NotificationThemeExtension extends Extension {
     // journalctl -f -o cat SYSLOG_IDENTIFIER=fix-dash-by-blueray453
     journal(`Enabled`);
 
+
+    this._oldUpdateShouldShow = thumbnailsBox._updateShouldShow;
+    thumbnailsBox._updateShouldShow = () => {
+      const shouldShow = false;
+
+      if (thumbnailsBox._shouldShow === shouldShow)
+        return;
+
+      thumbnailsBox._shouldShow = shouldShow;
+      thumbnailsBox.notify('should-show');
+    }
+    thumbnailsBox._updateShouldShow();
+
     this._overviewSignalId = Main.overview.connect('showing', () => {
       journal('Overview showing - applying changes');
-      const dash = Main.overview._overview._controls?.dash;
-      if (!dash) {
-        journal('Dash not found');
-        return;
-      }
 
-      this._setDashDimensions(dash);
-      this._setDashPosition(dash);
-      this._setIconSize(dash);
+      this._setDashDimensions();
+      this._setDashPosition();
+      this._setIconSize();
 
       // Disconnect after first use
       if (this._overviewSignalId) {
@@ -56,47 +68,46 @@ export default class NotificationThemeExtension extends Extension {
     });
   }
 
-
   /**
      * Set dash container and background dimensions
      */
-  _setDashDimensions(dash) {
+  _setDashDimensions() {
     journal(`_setDashDimensions`);
     // Set dash container width
-    dash._dashContainer.width = -1;
+    Dash._dashContainer.width = -1;
 
     // Set dash and container heights
-    dash.height = 350;
-    dash._dashContainer.height = 150;
+    Dash.height = 350;
+    Dash._dashContainer.height = 150;
 
     // Set background height
-    if (dash._background) {
-      dash._background.set_height(150);
-      dash._background.min_height = 150;
+    if (Dash._background) {
+      Dash._background.set_height(150);
+      Dash._background.min_height = 150;
     }
   }
 
   /**
    * Set dash position (vertical translation)
    */
-  _setDashPosition(dash) {
+  _setDashPosition() {
     journal(`_setDashPosition`);
-    dash.translation_y = -100;
+    Dash.translation_y = -100;
   }
 
   /**
    * Force icon size to 112px
    */
-  _setIconSize(dash) {
+  _setIconSize() {
     // Store original icon size
-    this._originalIconSize = dash.iconSize;
+    this._originalIconSize = Dash.iconSize;
 
     // Connect to icon-size-changed to force our size
-    this._iconSizeSignal = dash.connect('icon-size-changed', () => {
+    this._iconSizeSignal = Dash.connect('icon-size-changed', () => {
       journal(`Icon size change`);
-      if (dash.iconSize !== 112) {
+      if (Dash.iconSize !== 112) {
         journal(`Icon size not 112`);
-        dash.iconSize = 112;
+        Dash.iconSize = 112;
 
         // // Manually update all icon sizes
         // const iconChildren = dash._box?.get_children().filter(actor => {
@@ -118,7 +129,7 @@ export default class NotificationThemeExtension extends Extension {
     });
 
     // Set initial size
-    dash.iconSize = 112;
+    Dash.iconSize = 112;
     // dash.emit('icon-size-changed');
   }
 
@@ -129,30 +140,32 @@ export default class NotificationThemeExtension extends Extension {
       this._overviewSignalId = null;
     }
 
-    const dash = Main.overview._overview._controls?.dash;
-    if (!dash) return;
-
     // Restore icon size
     if (this._iconSizeSignal) {
-      dash.disconnect(this._iconSizeSignal);
+      Dash.disconnect(this._iconSizeSignal);
       this._iconSizeSignal = null;
     }
 
     if (this._originalIconSize !== null) {
-      dash.iconSize = this._originalIconSize;
-      dash.emit('icon-size-changed');
+      Dash.iconSize = this._originalIconSize;
+      Dash.emit('icon-size-changed');
       this._originalIconSize = null;
     }
 
     // Reset dimensions
-    dash._dashContainer.width = -1;
-    dash.height = -1;
-    dash._dashContainer.height = -1;
-    dash.translation_y = 0;
+    Dash._dashContainer.width = -1;
+    Dash.height = -1;
+    Dash._dashContainer.height = -1;
+    Dash.translation_y = 0;
 
-    if (dash._background) {
-      dash._background.set_height(-1);
-      dash._background.min_height = -1;
+    if (Dash._background) {
+      Dash._background.set_height(-1);
+      Dash._background.min_height = -1;
     }
+
+    if (this._oldUpdateShouldShow) {
+      thumbnailsBox._updateShouldShow = this._oldUpdateShouldShow;
+    }
+    thumbnailsBox._updateShouldShow();
   }
 }
