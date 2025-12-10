@@ -47,7 +47,8 @@ export default class NotificationThemeExtension extends Extension {
     // ws.opacity = 0;         // invisible
     // ws.visible = false;     // GNOME ignores it in layout
 
-    // const search = Main.overview.searchEntry;
+    // // const search = Main.overview.searchEntry;
+    // const search = OverviewControls._searchEntry;
     // search.hide();
     // search.opacity = 0;
     // search.visible = false;
