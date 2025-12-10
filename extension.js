@@ -126,23 +126,6 @@ export default class NotificationThemeExtension extends Extension {
       if (Dash.iconSize !== 112) {
         journal(`Icon size not 112`);
         Dash.iconSize = 112;
-
-        // // Manually update all icon sizes
-        // const iconChildren = dash._box?.get_children().filter(actor => {
-        //   return actor.child?._delegate?.icon;
-        // }) || [];
-
-        // iconChildren.forEach(actor => {
-        //   const icon = actor.child?._delegate?.icon;
-        //   if (icon) {
-        //     icon.setIconSize(112);
-        //   }
-        // });
-
-        // // Update show apps icon
-        // if (dash._showAppsIcon?.icon) {
-        //   dash._showAppsIcon.icon.setIconSize(112);
-        // }
       }
     });
 
