@@ -40,6 +40,17 @@ export default class NotificationThemeExtension extends Extension {
     // journalctl -f -o cat SYSLOG_IDENTIFIER=fix-dash-by-blueray453
     journal(`Enabled`);
 
+    // OverviewControls.hide();
+
+    // const ws = OverviewControls._workspacesDisplay;
+
+    // ws.opacity = 0;         // invisible
+    // ws.visible = false;     // GNOME ignores it in layout
+
+    // const search = Main.overview.searchEntry;
+    // search.hide();
+    // search.opacity = 0;
+    // search.visible = false;
 
     this._oldUpdateShouldShow = thumbnailsBox._updateShouldShow;
     thumbnailsBox._updateShouldShow = () => {
