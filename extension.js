@@ -4,7 +4,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { setLogging, setLogFn, journal } from './utils.js';
 
 const OverviewControls = Main.overview._overview._controls;
-const thumbnailsBox = OverviewControls._thumbnailsBox;
+
 const Dash = OverviewControls.dash;
 
 export default class NotificationThemeExtension extends Extension {
@@ -58,18 +58,6 @@ export default class NotificationThemeExtension extends Extension {
     // search.opacity = 0;
     // search.visible = false;
 
-    this._oldUpdateShouldShow = thumbnailsBox._updateShouldShow;
-    thumbnailsBox._updateShouldShow = () => {
-      const shouldShow = false;
-
-      if (thumbnailsBox._shouldShow === shouldShow)
-        return;
-
-      thumbnailsBox._shouldShow = shouldShow;
-      thumbnailsBox.notify('should-show');
-    }
-    thumbnailsBox._updateShouldShow();
-
     // this._overviewSignalId = Main.overview.connect('showing', () => {
     //   journal('Overview showing - applying changes');
 
@@ -89,9 +77,6 @@ export default class NotificationThemeExtension extends Extension {
     this._setIconSize();
   }
 
-  /**
-     * Set dash container and background dimensions
-     */
   _setDashDimensions() {
     journal(`_setDashDimensions`);
     // Set dash container width
@@ -172,10 +157,5 @@ export default class NotificationThemeExtension extends Extension {
       Dash._background.set_height(-1);
       Dash._background.min_height = -1;
     }
-
-    if (this._oldUpdateShouldShow) {
-      thumbnailsBox._updateShouldShow = this._oldUpdateShouldShow;
-    }
-    thumbnailsBox._updateShouldShow();
   }
 }
