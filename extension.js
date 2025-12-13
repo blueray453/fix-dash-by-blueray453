@@ -135,11 +135,11 @@ export default class NotificationThemeExtension extends Extension {
   }
 
   disable() {
-    // Cleanup startup signal if still connected
-    if (this._overviewSignalId) {
-      Main.overview.disconnect(this._overviewSignalId);
-      this._overviewSignalId = null;
-    }
+    // // Cleanup startup signal if still connected
+    // if (this._overviewSignalId) {
+    //   Main.overview.disconnect(this._overviewSignalId);
+    //   this._overviewSignalId = null;
+    // }
 
     // Restore icon size
     if (this._iconSizeSignal) {
